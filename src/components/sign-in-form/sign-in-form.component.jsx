@@ -1,14 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
+
 import {
-  setCurrentUserDetails,
-  setCurrentUserId,
+  emailSignInStart,
+  googleSignInStart,
 } from "../../redux-store/user/user.action";
-import {
-  signAuthUserWithEmailAndPassword,
-  signInWithGooglePopup,
-} from "../../utils/firebase/firebase.utils";
 
 import FormInput from "../form-input/form-input.component";
 import Button, { BUTTON_TYPE_CLASSES } from "../button/button.component";
@@ -23,53 +20,13 @@ const SignInForm = () => {
     formState: { errors },
   } = useForm();
 
-  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const signInUserWithEmail = async ({ email, password }) => {
-    try {
-      const { user } = await signAuthUserWithEmailAndPassword(email, password);
-      dispatch(setCurrentUserId(user.uid));
-      navigate("/profile");
-      dispatch(
-        setCurrentUserDetails({
-          displayName: user.displayName,
-          email: user.email,
-        })
-      );
-      reset();
-    } catch (error) {
-      switch (error.message) {
-        case "Firebase: Error (auth/user-not-found).":
-          alert(`This email is not registered. Sign up first`);
-          break;
-        case "Firebase: Error (auth/wrong-password).":
-          alert(`Incorrect password`);
-          break;
-        default:
-          console.log(`Unhandled type error ${error.message}`);
-      }
-      throw error;
-    }
-  };
+  const signInUserWithEmail = ({ email, password }) =>
+    dispatch(emailSignInStart(email, password, navigate, reset));
 
-  const signInWithGoogle = async () => {
-    try {
-      const { user } = await signInWithGooglePopup();
-      dispatch(setCurrentUserId(user.uid));
-      navigate("/profile");
-      dispatch(
-        setCurrentUserDetails({
-          displayName: user.displayName,
-          email: user.email,
-        })
-      );
-      reset();
-    } catch (error) {
-      console.log(error.message);
-      throw error;
-    }
-  };
+  const signInWithGoogle = () => dispatch(googleSignInStart(navigate));
 
   return (
     <StyledSignInCon>

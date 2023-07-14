@@ -1,10 +1,12 @@
 import { useSelector } from "react-redux";
 import { Route, Routes } from "react-router-dom";
 
+import { selectIsCategoriesLoading } from "../../../redux-store/categories/category.selector";
+
 import CategoriesPreview from "../categories-preview/categories-preview.component";
 import Category from "../category/category.component";
-import { selectIsCategoriesLoading } from "../../../redux-store/categories/category.selector";
 import Spinner from "../../spinner/spinner.component";
+
 const Shop = () => {
   const isCategoriesLoading = useSelector(selectIsCategoriesLoading);
 

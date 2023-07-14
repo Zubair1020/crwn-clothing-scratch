@@ -1,8 +1,10 @@
 import { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+
 import { selectCurrentUserId } from "./redux-store/user/user.selector";
-import { fetchCategoriesAsync } from "./redux-store/categories/category.action";
+import { fetchCategoriesStart } from "./redux-store/categories/category.action";
+import { checkUserSession } from "./redux-store/user/user.action";
 
 import GlobalStyle from "./global.style";
 import Navigation from "./components/routes/navigation/navigation.component";
@@ -17,7 +19,11 @@ const App = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchCategoriesAsync());
+    dispatch(checkUserSession());
+  }, []);
+
+  useEffect(() => {
+    dispatch(fetchCategoriesStart());
   }, []);
   return (
     <>

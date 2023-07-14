@@ -4,6 +4,8 @@ import {
   getAuth,
   GoogleAuthProvider,
   signInWithPopup,
+  updateProfile,
+  onAuthStateChanged,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
@@ -36,9 +38,27 @@ export const signAuthUserWithEmailAndPassword = async (email, password) => {
   return await signInWithEmailAndPassword(auth, email, password);
 };
 
-export const signOutUser = async () => await signOut(auth);
-
 export const getCategoriesAndDocuments = async () => {
   const querySnapshot = await getDocs(collection(db, "collection"));
   return querySnapshot.docs.map((docSnapShot) => docSnapShot.data());
 };
+
+export const updateCurrentUserProfile = async (user, displayName) =>
+  await updateProfile(user, { displayName });
+
+export const signOutUser = () => signOut(auth);
+
+export const onAuthStateChangedListener = (callback) =>
+  onAuthStateChanged(auth, callback);
+
+export const getCurrentUser = async () =>
+  new Promise((resolve, reject) => {
+    const unsubscribe = onAuthStateChanged(
+      auth,
+      (userAuth) => {
+        unsubscribe();
+        resolve(userAuth);
+      },
+      reject
+    );
+  });

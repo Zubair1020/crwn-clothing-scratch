@@ -1,3 +1,3 @@
-export const selectCurrentUserId = ({ user }) => user.currentUserId;
+export const selectCurrentUserId = ({ user }) => user.currentUser.id;
 
-export const selectCurrentUserDetails = ({ user }) => user.currentUserDetails;
+export const selectCurrentUseDetails = ({ user }) => user.currentUser.details;

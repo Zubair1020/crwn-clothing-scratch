@@ -1,11 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { selectCurrentUserDetails } from "../../../redux-store/user/user.selector";
 import { selectCartItems } from "../../../redux-store/cart/cart.selector";
-import {
-  setCurrentUserDetails,
-  setCurrentUserId,
-} from "../../../redux-store/user/user.action";
+
+import { selectCurrentUseDetails } from "../../../redux-store/user/user.selector";
+import { signOutStart } from "../../../redux-store/user/user.action";
 
 import CheckOut from "../checkout/checkout.component";
 import {
@@ -16,16 +14,13 @@ import {
 } from "./profile.style";
 
 const Profile = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const currentUserDetails = useSelector(selectCurrentUserDetails);
+  const currentUserDetails = useSelector(selectCurrentUseDetails);
   const cartItems = useSelector(selectCartItems);
+  const dispatch = useDispatch();
 
-  const logOutUser = () => {
-    dispatch(setCurrentUserId(null));
-    dispatch(setCurrentUserDetails({}));
-    navigate("/auth");
-  };
+  const logOutUser = () => dispatch(signOutStart(navigate));
+
   return (
     <StyledContainer>
       <StyledProfileCont>

@@ -1,12 +1,8 @@
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { updateProfile } from "firebase/auth";
-import { useDispatch } from "react-redux";
-import { createAuthUserWithEmailAndPassword } from "../../utils/firebase/firebase.utils";
-import {
-  setCurrentUserDetails,
-  setCurrentUserId,
-} from "../../redux-store/user/user.action";
+
+import { signUpStart } from "../../redux-store/user/user.action";
 
 import FormInput from "../form-input/form-input.component";
 import { StyledSignUpCon, StyledButton } from "./sign-up-form.style";
@@ -20,36 +16,12 @@ const SignUpFrom = () => {
     formState: { errors },
   } = useForm();
 
-  const dispatch = useDispatch();
   const password = watch("password");
   const navigate = useNavigate();
-  const createUserWithEmail = async ({ displayName, email, password }) => {
-    try {
-      const { user } = await createAuthUserWithEmailAndPassword(
-        email,
-        password
-      );
-      reset();
-      dispatch(setCurrentUserId(user.uid));
-      navigate("/profile");
-      await updateProfile(user, { displayName });
-      dispatch(
-        setCurrentUserDetails({
-          displayName: user.displayName,
-          email: user.email,
-        })
-      );
-    } catch (error) {
-      switch (error.message) {
-        case "Firebase: Error (auth/email-already-in-use).":
-          alert("This email is allday registered");
-          break;
-        default:
-          console.log(`Unhandled type error ${error.message}`);
-      }
-      throw error;
-    }
-  };
+  const dispatch = useDispatch();
+
+  const createUserWithEmail = async ({ displayName, email, password }) =>
+    dispatch(signUpStart(displayName, email, password, navigate, reset));
 
   return (
     <>

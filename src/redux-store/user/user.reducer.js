@@ -1,8 +1,9 @@
 import { USER_ACTION_TYPES } from "./user.types";
 
 const USER_INITIAL_STATE = {
-  currentUserId: null,
-  currentUserDetails: {},
+  currentUser: {},
+  isLoading: false,
+  error: null,
 };
 
 export const userReducer = (
@@ -10,15 +11,31 @@ export const userReducer = (
   { type, payload } = {}
 ) => {
   switch (type) {
-    case USER_ACTION_TYPES.SET_CURRENT_USER_ID:
+    case USER_ACTION_TYPES.EMAIL_SIGN_IN_START:
+    case USER_ACTION_TYPES.GOOGLE_SIGN_IN_START:
+    case USER_ACTION_TYPES.SIGN_UP_START:
       return {
         ...state,
-        currentUserId: payload,
+        isLoading: true,
       };
-    case USER_ACTION_TYPES.SET_CURRENT_USER_DETAILS:
+    case USER_ACTION_TYPES.SIGN_IN_SUCCESS:
       return {
         ...state,
-        currentUserDetails: payload,
+        currentUser: payload,
+        isLoading: false,
+      };
+    case USER_ACTION_TYPES.SIGN_OUT_SUCCESS:
+      return {
+        ...state,
+        currentUser: {},
+      };
+    case USER_ACTION_TYPES.SIGN_IN_FAILED:
+    case USER_ACTION_TYPES.SIGN_UP_FAILED:
+    case USER_ACTION_TYPES.SIGN_OUT_FAILED:
+      return {
+        ...state,
+        error: payload,
+        isLoading: false,
       };
     default:
       return state;
