@@ -1,8 +1,16 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 
-import { signUpStart } from "../../redux-store/user/user.action";
+import {
+  signInFailed,
+  signUpFailed,
+  signUpStart,
+} from "../../redux-store/user/user.action";
+import {
+  selectCurrentUserError,
+  selectCurrentUserLoading,
+} from "../../redux-store/user/user.selector";
 
 import FormInput from "../form-input/form-input.component";
 import { StyledSignUpCon, StyledButton } from "./sign-up-form.style";
@@ -19,6 +27,17 @@ const SignUpFrom = () => {
   const password = watch("password");
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const isCurrentUserLoading = useSelector(selectCurrentUserLoading);
+  const isCurrentUserError = useSelector(selectCurrentUserError);
+
+  switch (isCurrentUserError.message) {
+    case "Firebase: Error (auth/email-already-in-use).":
+      alert("User this emil already registered");
+      dispatch(signUpFailed(null));
+      break;
+    default:
+      console.error(isCurrentUserError.message);
+  }
 
   const createUserWithEmail = async ({ displayName, email, password }) =>
     dispatch(signUpStart(displayName, email, password, navigate, reset));
@@ -97,6 +116,7 @@ const SignUpFrom = () => {
           />
 
           <StyledButton
+            isLoading={isCurrentUserLoading.signUp}
             disabled={
               !!(
                 errors.displayName ||

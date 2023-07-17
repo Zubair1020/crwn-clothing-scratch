@@ -32,7 +32,7 @@ export function* isUserAuthenticated() {
     yield put(
       signInSuccess({
         id: userAuth.uid,
-        details: { displayName: userAuth.displayName, email: userAuth.email },
+        details: { userName: userAuth.displayName, email: userAuth.email },
       })
     );
   } catch (error) {

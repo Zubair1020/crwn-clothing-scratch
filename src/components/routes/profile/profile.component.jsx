@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { selectCartItems } from "../../../redux-store/cart/cart.selector";
 
-import { selectCurrentUseDetails } from "../../../redux-store/user/user.selector";
+import { selectCurrentUserDetails } from "../../../redux-store/user/user.selector";
 import { signOutStart } from "../../../redux-store/user/user.action";
 
 import CheckOut from "../checkout/checkout.component";
@@ -15,7 +15,7 @@ import {
 
 const Profile = () => {
   const navigate = useNavigate();
-  const currentUserDetails = useSelector(selectCurrentUseDetails);
+  const { userName, email } = useSelector(selectCurrentUserDetails);
   const cartItems = useSelector(selectCartItems);
   const dispatch = useDispatch();
 
@@ -26,8 +26,8 @@ const Profile = () => {
       <StyledProfileCont>
         <h2>User Profile</h2>
         <div>
-          <h4>{currentUserDetails.displayName}</h4>
-          <h4>{currentUserDetails.email}</h4>
+          <h4>{userName}</h4>
+          <h4>{email}</h4>
           <StyledButton
             type="button"
             onClick={logOutUser}

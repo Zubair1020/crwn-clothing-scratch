@@ -1,11 +1,13 @@
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 
 import {
   emailSignInStart,
   googleSignInStart,
 } from "../../redux-store/user/user.action";
+
+import { selectCurrentUserLoading } from "../../redux-store/user/user.selector";
 
 import FormInput from "../form-input/form-input.component";
 import Button, { BUTTON_TYPE_CLASSES } from "../button/button.component";
@@ -22,6 +24,7 @@ const SignInForm = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const isCurrentUserLoading = useSelector(selectCurrentUserLoading);
 
   const signInUserWithEmail = ({ email, password }) =>
     dispatch(emailSignInStart(email, password, navigate, reset));
@@ -70,6 +73,7 @@ const SignInForm = () => {
         <StyledButtonsCon>
           <Button
             type="submit"
+            isLoading={isCurrentUserLoading.signIn}
             disabled={!!(errors.email || errors.password)}
           >
             Sign IN
@@ -78,6 +82,7 @@ const SignInForm = () => {
             type="button"
             buttonType={BUTTON_TYPE_CLASSES.google}
             onClick={signInWithGoogle}
+            isLoading={isCurrentUserLoading.googleLogIn}
           >
             GOOGLE SIGN IN
           </Button>
