@@ -51,11 +51,12 @@ const PaymentForm = () => {
         setIsProcessingPayment(false);
         throw new Error(paymentResult.error.message);
       } else if (paymentResult.paymentIntent.status === "succeeded") {
-        alert("Payment Successful");
         setIsProcessingPayment(false);
+        alert("Payment Successful");
       }
     } catch (error) {
       alert(error.message);
+      setIsProcessingPayment(false);
       throw error;
     }
   };
